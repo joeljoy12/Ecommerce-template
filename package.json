@@ -8,16 +8,37 @@
     "start": "next start"
   },
   "dependencies": {
+    "@sanity/client": "^7.11.2",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.10.1",
+    "@stripe/stripe-js": "^7.9.0",
+    "dotenv": "^17.2.3",
+    "framer-motion": "^12.23.22",
+    "lucide-react": "^0.544.0",
+    "micro": "^10.0.1",
+    "next": "^15.5.4",
+    "next-sanity": "^11.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.5.3"
+    "react-redux": "^9.2.0",
+    "sanity": "^4.10.1",
+    "stripe": "^18.5.0",
+    "styled-components": "^6.1.19",
+    "swiper": "^11.1.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
-  }
+    "@types/stripe": "^8.0.416",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }
