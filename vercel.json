@@ -1,0 +1,3 @@
+{
+  "buildCommand": "NEXT_RUNTIME=classic next build"
+}

@@ -5,9 +5,11 @@ import { client } from "@/sanity/lib/sanity.client"; //
 
 // ✅ Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
-const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
+
 
 export async function POST(req: Request) {
+
+  const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
   try {
     const { items, email } = await req.json()
 

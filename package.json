@@ -26,6 +26,7 @@
     "stripe": "^18.5.0",
     "styled-components": "^6.1.19",
     "swiper": "^11.1.1",
+    "vercel.json": "^0.1.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
