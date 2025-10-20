@@ -13,10 +13,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 export default async function PaymentCancelled({
   searchParams,
 }: {
-  searchParams: { session_id?: string }
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const sessionId = searchParams?.session_id
-
+  const params = await searchParams
+  const sessionId = params?.session_id as string | undefined
   if (!sessionId) {
     return (
       <div className="min-h-screen flex items-center justify-center">
