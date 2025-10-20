@@ -14,13 +14,16 @@ async function getProduct(slug: string) {
   )
 }
 
-
+// ✅ FIXED: match Next.js 15.5 App Router typing
 export default async function ProductPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const { slug } = params
+  // ✅ Await the params Promise (same issue as before)
+  const resolvedParams = await params
+  const slug = resolvedParams?.slug as string
+
   const product = await getProduct(slug)
 
   if (!product) {
