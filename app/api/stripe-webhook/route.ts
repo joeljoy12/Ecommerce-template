@@ -1,17 +1,17 @@
 import { headers } from "next/headers"
 import Stripe from "stripe"
 import { writeClient } from "@/sanity/lib/sanityWriteClient"
+import crypto from "crypto" // ✅ explicit import for randomUUID()
 
-export const runtime = "nodejs" // ✅ ensures Node features like crypto work
+export const runtime = "nodejs" // ✅ ensures Node features work (like crypto, Buffer)
 
 // ✅ Initialize Stripe with explicit API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
-// ✅ The correct handler for Next.js App Router
+// ✅ The correct App Router route handler
 export async function POST(req: Request) {
-  const sig = headers().get("stripe-signature")
+  const sig = (await headers()).get("stripe-signature")
+
 
   if (!sig) {
     return new Response("Missing Stripe signature", { status: 400 })
@@ -19,21 +19,25 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.arrayBuffer()
+
+    // ✅ Construct Stripe event from raw body
     const event = stripe.webhooks.constructEvent(
       Buffer.from(body),
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET as string
     )
 
+    // ✅ Handle completed checkout sessions
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
       const address = session.customer_details?.address
 
+      // ✅ Save order to Sanity
       await writeClient.create({
         _type: "order",
         stripeSessionId: session.id,
-        email: session.customer_details?.email,
+        email: session.customer_details?.email || "",
         total: (session.amount_total || 0) / 100,
         shippingAddress: {
           name: session.customer_details?.name || "",
@@ -45,7 +49,7 @@ export async function POST(req: Request) {
           country: address?.country || "",
         },
         items: lineItems.data.map((i) => ({
-          _key: crypto.randomUUID(),
+          _key: crypto.randomUUID(), // ✅ unique _key for each line item
           name: i.description,
           quantity: i.quantity,
           price: i.amount_total / 100,
