@@ -1,38 +1,34 @@
-import { buffer } from "micro"
-import Stripe from "stripe"
-import type { NextApiRequest, NextApiResponse } from "next"
-import { writeClient } from "@/sanity/lib/sanityWriteClient"
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+import { writeClient } from "@/sanity/lib/sanityWriteClient";
 
-export const config = { api: { bodyParser: false } }
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== "POST") {
-    return res.status(405).send("Method Not Allowed")
-  }
-
-  const sig = req.headers["stripe-signature"]
-  if (!sig) {
-    return res.status(400).send("Missing Stripe signature")
-  }
-
-  const buf = await buffer(req)
-
+export async function POST(req: Request) {
   try {
+    const sig = req.headers.get("stripe-signature");
+    if (!sig) {
+      return NextResponse.json(
+        { error: "Missing Stripe signature" },
+        { status: 400 }
+      );
+    }
+
+    // Read raw body buffer from the request
+    const buf = Buffer.from(await req.arrayBuffer());
+
+    // Verify and construct the event
     const event = stripe.webhooks.constructEvent(
       buf,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
-    )
+    );
 
+    // Handle checkout completion
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session
-      const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-      const address = session.customer_details?.address
+      const session = event.data.object as Stripe.Checkout.Session;
+      const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+      const address = session.customer_details?.address;
 
       await writeClient.create({
         _type: "order",
@@ -56,14 +52,14 @@ export default async function handler(
         })),
         status: "processing",
         createdAt: new Date().toISOString(),
-      })
+      });
 
-      console.log("✅ Order saved:", session.id)
+      console.log("✅ Order saved:", session.id);
     }
 
-    res.status(200).send("OK")
+    return NextResponse.json({ received: true });
   } catch (err: any) {
-    console.error("❌ Webhook Error:", err.message)
-    res.status(400).send(`Webhook Error: ${err.message}`)
+    console.error("❌ Webhook Error:", err.message);
+    return NextResponse.json({ error: err.message }, { status: 400 });
   }
 }
