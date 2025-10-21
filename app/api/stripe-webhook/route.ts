@@ -5,7 +5,9 @@ import { writeClient } from "@/sanity/lib/sanityWriteClient"
 export const runtime = "nodejs" // ✅ ensures Node features like crypto work
 
 // ✅ Initialize Stripe with explicit API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-06-20",
+})
 
 // ✅ The correct handler for Next.js App Router
 export async function POST(req: Request) {
