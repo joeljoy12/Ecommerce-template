@@ -10,8 +10,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
 // ✅ The correct App Router route handler
 export async function POST(req: Request) {
-  const sig = (await headers()).get("stripe-signature")
-
+ 
+ const sig = (await headers()).get("stripe-signature")
 
   if (!sig) {
     return new Response("Missing Stripe signature", { status: 400 })
