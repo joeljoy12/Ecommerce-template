@@ -1,24 +1,30 @@
-import { NextResponse } from "next/server"
+import { headers as nextHeaders } from "next/headers"
 import Stripe from "stripe"
 import { writeClient } from "@/sanity/lib/sanityWriteClient"
-import { client } from "@/sanity/lib/sanity.client"; //
+import { client } from "@/sanity/lib/sanity.client"
 
-// ✅ Initialize Stripe
+export const runtime = "nodejs"
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
-
+// ✅ Works safely in both Next.js 14 and 15
 export async function POST(req: Request) {
+  // Force-resolve the promise so TypeScript knows it's a Headers object
+  const resolvedHeaders = (await nextHeaders()) as unknown as Headers
+  const sig = resolvedHeaders.get("stripe-signature")
 
-  const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
+  if (!sig) {
+    return new Response("Missing Stripe signature", { status: 400 })
+  }
+
   try {
     const { items, email } = await req.json()
+    const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
 
-    // ✅ Validate request
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: "No items provided" }, { status: 400 })
+      return new Response("No items provided", { status: 400 })
     }
 
-    // ✅ Prepare Stripe line items
     const line_items = items.map((item: any) => ({
       price_data: {
         currency: "usd",
@@ -31,51 +37,31 @@ export async function POST(req: Request) {
       quantity: item.quantity,
     }))
 
-    // ✅ Make sure NEXT_PUBLIC_SITE_URL exists
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-    if (!siteUrl) {
-      throw new Error(
-        "NEXT_PUBLIC_SITE_URL is missing — set it in your .env.local (e.g. http://localhost:3000)"
-      )
-    }
-
-    // ✅ Create Stripe Checkout session
-    // ✅ Create Stripe Checkout session
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ["card"],
-  mode: "payment",
-  line_items,
-  customer_email: email || "guest@unknown.com",
-
-  // 🚀 ADD THIS PART
-  shipping_address_collection: {
-    allowed_countries:settings?.allowedCountries?.length > 0
-    ? settings.allowedCountries
-    : ["US", "CA", "GB"] // customize countries
-  },
-  shipping_options: [
-    {
-      shipping_rate_data: {
-        type: "fixed_amount",
-        fixed_amount: { amount: 0, currency: "usd" },
-        display_name: "Free Shipping",
-        delivery_estimate: {
-          minimum: { unit: "business_day", value: 3 },
-          maximum: { unit: "business_day", value: 7 },
-        },
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items,
+      customer_email: email || "guest@unknown.com",
+      shipping_address_collection: {
+        allowed_countries:
+          settings?.allowedCountries?.length > 0
+            ? settings.allowedCountries
+            : ["US", "CA", "GB"],
       },
-    },
-  ],
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 0, currency: "usd" },
+            display_name: "Free Shipping",
+          },
+        },
+      ],
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/cart`,
+    })
 
-  success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${siteUrl}/cart`,
-});
-
-
-
-    
-
-    // ✅ Save order to Sanity
     await writeClient.create({
       _type: "order",
       stripeSessionId: session.id,
@@ -85,26 +71,19 @@ const session = await stripe.checkout.sessions.create({
         0
       ),
       items: items.map((i: any) => ({
-    _key: crypto.randomUUID(), // ✅ add this line
-    name: i.name,
-    quantity: i.quantity,
-    price: i.price,
-    imageUrl: i.imageUrl,
-  }
-    
-    
-    )),
+        _key: crypto.randomUUID(),
+        name: i.name,
+        quantity: i.quantity,
+        price: i.price,
+        imageUrl: i.imageUrl,
+      })),
       status: "processing",
-      estimatedDelivery: new Date(
-        Date.now() + 5 * 24 * 60 * 60 * 1000
-      ).toISOString(),
       createdAt: new Date().toISOString(),
     })
 
-    // ✅ Return checkout URL
-    return NextResponse.json({ url: session.url })
+    return new Response(JSON.stringify({ url: session.url }), { status: 200 })
   } catch (err: any) {
-    console.error("Stripe Checkout Error:", err)
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    console.error("❌ Stripe Checkout Error:", err.message)
+    return new Response(`Error: ${err.message}`, { status: 500 })
   }
 }
