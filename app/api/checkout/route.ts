@@ -1,4 +1,4 @@
-import { headers as nextHeaders } from "next/headers"
+import { headers } from "next/headers"
 import Stripe from "stripe"
 import { writeClient } from "@/sanity/lib/sanityWriteClient"
 import { client } from "@/sanity/lib/sanity.client"
@@ -7,19 +7,11 @@ export const runtime = "nodejs"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
-// ✅ Works safely in both Next.js 14 and 15
 export async function POST(req: Request) {
-  // Force-resolve the promise so TypeScript knows it's a Headers object
-  const resolvedHeaders = (await nextHeaders()) as unknown as Headers
-  const sig = resolvedHeaders.get("stripe-signature")
-
-  if (!sig) {
-    return new Response("Missing Stripe signature", { status: 400 })
-  }
-
   try {
     const { items, email } = await req.json()
-    const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
+    const settings =
+      (await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)) || {}
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return new Response("No items provided", { status: 400 })
@@ -32,12 +24,13 @@ export async function POST(req: Request) {
           name: item.name,
           images: item.imageUrl ? [item.imageUrl] : [],
         },
-        unit_amount: Math.round(item.price * 100),
+        unit_amount: Math.round(Number(item.price) * 100),
       },
       quantity: item.quantity,
     }))
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -45,7 +38,7 @@ export async function POST(req: Request) {
       customer_email: email || "guest@unknown.com",
       shipping_address_collection: {
         allowed_countries:
-          settings?.allowedCountries?.length > 0
+          settings.allowedCountries?.length > 0
             ? settings.allowedCountries
             : ["US", "CA", "GB"],
       },
