@@ -14,7 +14,7 @@ import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 // import {structure} from './sanity/structure'
 
-import { schemaTypes } from './sanity/schemaTypes'
+import { schemaTypes } from './sanity/schemaTypes/index'
 
 export default defineConfig({
   name: 'luxskin-store',

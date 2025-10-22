@@ -1,69 +1,89 @@
-import { headers } from "next/headers"
+import { headers as nextHeaders } from "next/headers"
 import Stripe from "stripe"
 import { writeClient } from "@/sanity/lib/sanityWriteClient"
-import crypto from "crypto" // ✅ explicit import for randomUUID()
+import { client } from "@/sanity/lib/sanity.client"
 
-export const runtime = "nodejs" // ✅ ensures Node features work (like crypto, Buffer)
+export const runtime = "nodejs"
 
-// ✅ Initialize Stripe with explicit API version
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
-// ✅ The correct App Router route handler
+// ✅ Works safely in both Next.js 14 and 15
 export async function POST(req: Request) {
- 
- const sig = (await headers()).get("stripe-signature")
+  // Force-resolve the promise so TypeScript knows it's a Headers object
+  const resolvedHeaders = (await nextHeaders()) as unknown as Headers
+  const sig = resolvedHeaders.get("stripe-signature")
 
   if (!sig) {
     return new Response("Missing Stripe signature", { status: 400 })
   }
 
   try {
-    const body = await req.arrayBuffer()
+    const { items, email } = await req.json()
+    const settings = await client.fetch(`*[_type == "storeSettings"][0]{allowedCountries}`)
 
-    // ✅ Construct Stripe event from raw body
-    const event = stripe.webhooks.constructEvent(
-      Buffer.from(body),
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET as string
-    )
-
-    // ✅ Handle completed checkout sessions
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session
-      const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
-      const address = session.customer_details?.address
-
-      // ✅ Save order to Sanity
-      await writeClient.create({
-        _type: "order",
-        stripeSessionId: session.id,
-        email: session.customer_details?.email || "",
-        total: (session.amount_total || 0) / 100,
-        shippingAddress: {
-          name: session.customer_details?.name || "",
-          line1: address?.line1 || "",
-          line2: address?.line2 || "",
-          city: address?.city || "",
-          state: address?.state || "",
-          postalCode: address?.postal_code || "",
-          country: address?.country || "",
-        },
-        items: lineItems.data.map((i) => ({
-          _key: crypto.randomUUID(), // ✅ unique _key for each line item
-          name: i.description,
-          quantity: i.quantity,
-          price: i.amount_total / 100,
-        })),
-        status: "processing",
-        createdAt: new Date().toISOString(),
-      })
-
-      console.log("✅ Order saved:", session.id)
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return new Response("No items provided", { status: 400 })
     }
 
-    return new Response("OK", { status: 200 })
+    const line_items = items.map((item: any) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.name,
+          images: item.imageUrl ? [item.imageUrl] : [],
+        },
+        unit_amount: Math.round(item.price * 100),
+      },
+      quantity: item.quantity,
+    }))
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items,
+      customer_email: email || "guest@unknown.com",
+      shipping_address_collection: {
+        allowed_countries:
+          settings?.allowedCountries?.length > 0
+            ? settings.allowedCountries
+            : ["US", "CA", "GB"],
+      },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 0, currency: "usd" },
+            display_name: "Free Shipping",
+          },
+        },
+      ],
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/cart`,
+    })
+
+    await writeClient.create({
+      _type: "order",
+      stripeSessionId: session.id,
+      email: email || "guest@unknown.com",
+      total: line_items.reduce(
+        (sum, i) => sum + (i.price_data.unit_amount / 100) * i.quantity,
+        0
+      ),
+      items: items.map((i: any) => ({
+        _key: crypto.randomUUID(),
+        name: i.name,
+        quantity: i.quantity,
+        price: i.price,
+        imageUrl: i.imageUrl,
+      })),
+      status: "processing",
+      createdAt: new Date().toISOString(),
+    })
+
+    return new Response(JSON.stringify({ url: session.url }), { status: 200 })
   } catch (err: any) {
-    console.error("❌ Webhook Error:", err.message)
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+    console.error("❌ Stripe Checkout Error:", err.message)
+    return new Response(`Error: ${err.message}`, { status: 500 })
   }
 }
