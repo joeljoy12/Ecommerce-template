@@ -4,7 +4,7 @@ import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { apiVersion, dataset, projectId } from './sanity/env'
-import { schemaTypes } from './sanity/schemaTypes/index' // ✅ only this import
+import { schemaTypes } from './sanity/schemaTypes' 
 
 export default defineConfig({
   name: 'luxskin-store',
