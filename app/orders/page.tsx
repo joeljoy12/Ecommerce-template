@@ -93,7 +93,7 @@ export default function MyOrdersPage() {
   return (
     <section className="min-h-screen bg-gradient-to-br from-[#fff8ec] via-white to-gray-50 py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-serif font-bold text-gray-900 mb-12 text-center mt-6">
+        <h1 className="text-4xl font-serif font-bold text-gray-900 mb-12 text-center mt-20">
           My Orders
         </h1>
 
