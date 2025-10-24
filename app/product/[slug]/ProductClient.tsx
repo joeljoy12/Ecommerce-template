@@ -31,20 +31,30 @@ export default function ProductPage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           {/* Main Image */}
-          <div className="space-y-6">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
-              <div className="relative border-2 border-gray-100 rounded-3xl overflow-hidden shadow-2xl shadow-[#D4AF37]/10 hover:shadow-[#D4AF37]/20 transition-all duration-500 bg-white max-w-lg lg:max-w-3xl xl:max-w-4xl lg:max-h-[600px] mx-auto">
-                <Image
-                  src={product.imageGallery?.[0] || "/placeholder.png"}
-                  alt={product.name}
-                  width={900}
-                  height={900}
-                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
-                  priority
-                />
-              </div>
-            </div>
+        <div className="space-y-6">
+  <div className="relative group">
+    <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/20 to-transparent rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
+
+    <div className="relative border-2 border-gray-100 rounded-3xl overflow-hidden shadow-2xl shadow-[#D4AF37]/10 hover:shadow-[#D4AF37]/20 transition-all duration-500 bg-white max-w-lg lg:max-w-3xl xl:max-w-4xl mx-auto">
+      <Image
+        src={product.imageGallery?.[0] || "/placeholder.png"}
+        alt={product.name}
+        width={900}
+        height={900}
+        priority
+        className="
+          w-full
+          h-[300px]       /* 👈 lowered image height */
+          md:h-[250px]    /* laptop: slightly taller */
+          lg:h-[400px]    /* desktop: normal height */
+          object-cover
+          hover:scale-105
+          transition-transform
+          duration-700
+        "
+      />
+    </div>
+  </div>
 
             {/* Thumbnails */}
             <div className="flex gap-4 justify-center lg:justify-start flex-wrap">
