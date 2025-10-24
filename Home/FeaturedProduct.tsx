@@ -9,16 +9,18 @@ async function getFeaturedProducts() {
       name,
       price,
       link,
-      "imageUrl": imageGallery[0].asset->url,
+      "slug": slug,
+      "imageUrl": imageGallery[0].asset->url
     }
   `)
 }
+
 
 export default async function FeaturedProducts() {
   const products = await getFeaturedProducts()
 
   return (
-    <section id="products" className="py-20 bg-[#F9FAFB]">
+    <section id="products" className="py-20 ">
       <div className="max-w-6xl mx-auto px-6">
         {/* Title */}
         <h2 className="text-3xl font-bold text-center mb-12 text-[#111111]">
