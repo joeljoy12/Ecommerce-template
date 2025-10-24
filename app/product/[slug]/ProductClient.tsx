@@ -45,7 +45,7 @@ export default function ProductPage({
         className="
           w-full
           h-[300px]       /* 👈 lowered image height */
-          md:h-[250px]    /* laptop: slightly taller */
+          md:h-[250px]
           lg:h-[400px]    /* desktop: normal height */
           object-cover
           hover:scale-105
