@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     }
 
     // ✅ Initialize Stripe safely *inside* the function
-    const stripe = new Stripe(stripeSecret, { apiVersion: "2024-06-20" })
+    const stripe = new Stripe(stripeSecret)
 
     // ✅ Get headers (Next.js 15 safe)
     const sig = (await nextHeaders()).get("stripe-signature")
