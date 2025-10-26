@@ -30,6 +30,15 @@
     "vercel.json": "^0.1.0",
     "zustand": "^5.0.8"
   },
+
+  "browserslist": [
+  "last 2 Chrome versions",
+  "last 2 Firefox versions",
+  "last 2 Safari versions",
+  "last 2 Edge versions"
+],
+
+  
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

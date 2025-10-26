@@ -8,7 +8,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export default function ProductPage({
   product,
-  quantity,
 }: {
   product: any
   quantity: number

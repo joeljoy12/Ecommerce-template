@@ -42,15 +42,17 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-// ✅ Load fonts
+// ✅ Self-hosted + non-blocking fonts
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap", // <-- crucial: prevents render blocking
 })
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
+  display: "swap", // <-- crucial: prevents render blocking
 })
 
 // ✅ Root layout component
@@ -60,7 +62,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preload fonts early to boost LCP */}
+        <link
+          rel="preload"
+          href="/_next/static/media/inter-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/_next/static/media/playfair-display-latin.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${inter.variable} ${playfair.variable} antialiased bg-white text-gray-900`}
       >
