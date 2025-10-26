@@ -1,5 +1,3 @@
-
-
 import { client } from "@/sanity/lib/sanity.client"
 import Image from "next/image"
 import Home from "./Home"
@@ -26,7 +24,6 @@ export default async function Page() {
   return (
     <section style={{ backgroundColor: hero.backgroundColor || "#fff" }}>
       <div className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 items-center gap-12">
-        
         {/* Left Side - Text */}
         <div>
           <h1 className="heading text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight text-[#111111] md:mt-18">
@@ -52,13 +49,12 @@ export default async function Page() {
         {/* Right Side - Image */}
         {hero.imageUrl && (
           <div className="flex justify-center">
-            {/* 👇 Container that controls image size & aspect ratio */}
             <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg aspect-square">
               <Image
                 src={hero.imageUrl}
                 alt={hero.heading || "Hero image"}
                 fill
-                className="object-cover rounded-lg  mt-10"
+                className="object-cover rounded-lg mt-10"
                 priority
               />
             </div>
@@ -66,7 +62,15 @@ export default async function Page() {
         )}
       </div>
 
+     {/* 👇 Elegant gray border at the end */}
+
+
+
+
+
       <Home />
+
+ 
     </section>
   )
 }

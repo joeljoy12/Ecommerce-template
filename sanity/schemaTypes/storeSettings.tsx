@@ -1,21 +1,107 @@
-export default {
+import type { Rule } from "sanity"
+import { defineType, defineField } from "sanity"
+import { useState } from "react"
+import { set, unset, PatchEvent } from "sanity"
+ 
+
+export default defineType({
   name: "storeSettings",
   title: "Store Settings",
   type: "document",
   fields: [
-    {
+    defineField({
       name: "storeName",
       title: "Store Name",
       type: "string",
+      description: "Name of your store — used in site title and metadata.",
+    validation: (Rule) => Rule.required().min(1),
+
+    }),
+
+    defineField({
+      name: "siteUrl",
+      title: "Website URL",
+      type: "url",
+      description: "Used for SEO and social sharing (e.g. https://yourstore.com)",
+      initialValue: "https://your-vercel-site-url.vercel.app",
+    validation: (Rule) => Rule.required(),
+
+    }),
+
+    defineField({
+      name: "siteDescription",
+      title: "Site Description",
+      type: "text",
+      rows: 3,
+      description: "Meta description for Google search results.",
+      initialValue:
+        "Shop premium quality products with fast checkout and worldwide shipping.",
+    }),
+
+    defineField({
+      name: "ogImage",
+      title: "Social Share Image (OG Image)",
+      type: "image",
+      description:
+        "Image shown when sharing on social media (recommended 1200x630).",
+      options: { hotspot: true },
+    }),
+
+    defineField({
+      
+  name: "stripeSection",
+  title: "💳 Stripe Configuration",
+  type: "object",
+  fields: [
+    {
+      name: "publishableKey",
+      title: "Stripe Publishable Key",
+      type: "string",
+      description: "Starts with pk_live_ or pk_test_. Paste from Stripe Dashboard → Developers → API Keys",
     },
     {
+      name: "secretKey",
+      title: "Stripe Secret Key",
+      type: "string",
+      description: "Starts with sk_live_ or sk_test_.",
+    },
+    {
+      name: "webhookSecret",
+      title: "Stripe Webhook Secret",
+      type: "string",
+      description: "Paste from your Stripe Webhook endpoint settings.",
+    },
+  ],
+},
+
+),
+
+    // 🌍 Enhanced Country Picker
+    defineField({
       name: "allowedCountries",
       title: "Allowed Shipping Countries",
       type: "array",
       of: [{ type: "string" }],
-   options: {
-  list: [
-    { title: "Afghanistan", value: "AF" },
+      description:
+        "Select countries where shipping is available. You can search or expand to view all.",
+      components: {
+        input: CountrySelectorInput, // 👈 Custom component defined below
+      },
+      validation: (Rule) => Rule.required().min(1),
+    }),
+  ],
+})
+
+/* -------------------------------
+   ✅ Custom Country Selector Input
+----------------------------------*/
+function CountrySelectorInput(props: any) {
+  const { value = [], onChange } = props
+  const [query, setQuery] = useState("")
+  const [showAll, setShowAll] = useState(false)
+
+  const allCountries = [
+  { title: "Afghanistan", value: "AF" },
     { title: "Albania", value: "AL" },
     { title: "Algeria", value: "DZ" },
     { title: "Andorra", value: "AD" },
@@ -206,11 +292,87 @@ export default {
     { title: "Yemen", value: "YE" },
     { title: "Zambia", value: "ZM" },
     { title: "Zimbabwe", value: "ZW" },
-  ],
-},
+  ]
 
-      description: "Select countries where shipping is available.",
-      validation: (Rule: any) => Rule.required().min(1),
-    },
-  ],
-};
+  // Filter countries by search
+  const filtered = allCountries.filter((c) =>
+    c.title.toLowerCase().includes(query.toLowerCase())
+  )
+
+  const visibleCountries = showAll ? filtered : filtered.slice(0, 5)
+
+  return (
+    <div style={{ padding: "0.5rem 0" }}>
+      {/* 🔍 Search bar */}
+      <input
+        type="text"
+        placeholder="Search countries..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "6px 10px",
+          borderRadius: "6px",
+          border: "1px solid #ddd",
+          marginBottom: "10px",
+        }}
+      />
+
+      {/* ✅ Country list */}
+
+
+<div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+  {visibleCountries.map((country) => {
+    const selected = value.includes(country.value)
+    return (
+      <label
+        key={country.value}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          cursor: "pointer",
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={(e) => {
+            const newValue = e.target.checked
+              ? [...value, country.value]
+              : value.filter((v: string) => v !== country.value)
+
+            // ✅ Proper Sanity Patch update
+            onChange(
+              PatchEvent.from(
+                newValue.length > 0 ? set(newValue) : unset()
+              )
+            )
+          }}
+        />
+        {country.title}
+      </label>
+    )
+  })}
+</div>
+
+
+      {/* 🔽 Show more / less button */}
+      {filtered.length > 5 && (
+        <button
+          type="button"
+          onClick={() => setShowAll(!showAll)}
+          style={{
+            marginTop: "10px",
+            color: "#0070f3",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          {showAll ? "Show less ▲" : "Show more ▼"}
+        </button>
+      )}
+    </div>
+  )
+}

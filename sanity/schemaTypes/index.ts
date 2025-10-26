@@ -8,7 +8,8 @@ import Testimonial from './Testimonial'
 import Faq from './Faq'
 import Hero from './Hero'
 import order from './order'
+import storeSettings from './storeSettings'
 
 
 
-export const schemaTypes = [Hero,product, About, collection,Benefits,Navbar,Testimonial,Footer,Faq,order]
+export const schemaTypes = [Hero,product, About, collection,Benefits,Navbar,Testimonial,Footer,Faq,order,storeSettings]

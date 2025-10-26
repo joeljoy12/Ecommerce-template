@@ -5,7 +5,17 @@ import { client } from "@/sanity/lib/sanity.client"
 
 export const runtime = "nodejs"
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
+
+
+const settings = await client.fetch(`*[_type == "storeSettings"][0]{ stripeSection }`);
+const stripeSecret = settings?.stripeSection?.secretKey;
+
+if (!stripeSecret) {
+  throw new Error("Stripe Secret Key not found. Please add it in Store Settings.");
+}
+
+const stripe = new Stripe(stripeSecret);
+
 
 export async function POST(req: Request) {
   try {

@@ -14,6 +14,7 @@ async function getProduct(slug: string) {
   )
 }
 
+
 // ✅ FIXED: match Next.js 15.5 App Router typing
 export default async function ProductPage({
   params,

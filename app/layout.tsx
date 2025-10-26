@@ -3,7 +3,46 @@ import "./globals.css"
 import Navbar from "@/Home/Navbar"
 import Footer from "@/Home/Footer"
 import { Inter, Playfair_Display } from "next/font/google"
+import { client } from "@/sanity/lib/sanity.client"
 
+// ✅ Fetch dynamic SEO data from Sanity
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await client.fetch(
+    `*[_type == "storeSettings"][0]{
+      storeName,
+      siteUrl,
+      siteDescription,
+      "ogImage": ogImage.asset->url
+    }`
+  )
+
+  const title = settings?.storeName || "Luxury Store"
+  const description =
+    settings?.siteDescription ||
+    "Welcome to our online store — premium products, smooth checkout."
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: settings?.ogImage || `${settings?.siteUrl || ""}/default-og.jpg`,
+          width: 1200,
+          height: 630,
+          alt: `${title} OpenGraph image`,
+        },
+      ],
+      url: settings?.siteUrl,
+      siteName: title,
+    },
+    metadataBase: new URL(settings?.siteUrl || "https://example.com"),
+  }
+}
+
+// ✅ Load fonts
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -14,11 +53,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 })
 
-export const metadata: Metadata = {
-  title: "Luxury E-Commerce Store",
-  description: "Next.js + Sanity powered luxury store template",
-}
-
+// ✅ Root layout component
 export default function RootLayout({
   children,
 }: {
@@ -30,7 +65,7 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} antialiased bg-white text-gray-900`}
       >
         <Navbar />
-        {children}
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

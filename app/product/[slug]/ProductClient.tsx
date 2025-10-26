@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { useCartStore } from "@/store/cartStore"
 import BuyButton from "./BuyButton"
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function ProductPage({
   product,
@@ -14,6 +15,19 @@ export default function ProductPage({
 }) {
   const [qty, setQty] = useState(1)
   const addToCart = useCartStore((state) => state.addToCart)
+
+
+  const notify = (msg: string) =>
+    toast.success(msg, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    })
+
 
   if (!product) {
     return (
@@ -45,7 +59,7 @@ export default function ProductPage({
         className="
           w-full
           h-[300px]       /* 👈 lowered image height */
-          md:h-[250px]
+          md:h-[300px]
           lg:h-[400px]    /* desktop: normal height */
           object-cover
           hover:scale-105
@@ -117,20 +131,22 @@ export default function ProductPage({
               </div>
 
               {/* Add to Cart Button */}
-              <button
-                onClick={() =>
-                  addToCart({
-                    _id: product._id,
-                    name: product.name,
-                    price: product.price,
-                    imageUrl: product.imageGallery?.[0] || "/placeholder.png",
-                    quantity: qty,
-                  })
-                }
-                className="w-full text-[#D4AF37] hover:text-white border border-[#D4AF37] hover:bg-[#b8952e] focus:ring-1 focus:outline-none focus:ring-[#f0dca8] font-medium rounded-lg text-sm text-center px-6 py-3"
-              >
-                Add to Cart
-              </button>
+            <button
+  onClick={() => {
+    addToCart({
+      _id: product._id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageGallery?.[0] || "/placeholder.png",
+      quantity: qty,
+    });
+    notify(` Added to cart! 🛍️`);
+  }}
+  className="w-full text-[#D4AF37] hover:text-white border border-[#D4AF37] hover:bg-[#b8952e] focus:ring-1 focus:outline-none focus:ring-[#f0dca8] font-medium rounded-lg text-sm text-center px-6 py-3 transition-all"
+>
+  Add to Cart
+</button>
+
             </div>
 
             {/* Buy Now */}
@@ -153,6 +169,9 @@ export default function ProductPage({
           </div>
         </div>
       </div>
+      <ToastContainer  position="top-right"
+  theme="colored"
+  toastStyle={{ backgroundColor: "#111", color: "#fff" }}/>
     </section>
   )
 }
