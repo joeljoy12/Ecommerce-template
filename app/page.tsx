@@ -56,6 +56,7 @@ export default async function Page() {
                 fill
                 className="object-cover rounded-lg mt-10"
                 priority
+                  fetchPriority="high"
               />
             </div>
           </div>
