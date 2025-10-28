@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+   
+    "dev": "next dev",
+    "build": "cross-env NEXT_TURBOPACK=0 next build",
     "start": "next start"
+
   },
   "dependencies": {
     "@sanity/client": "^7.11.2",
