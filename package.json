@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  
   "scripts": {
     "dev": "next dev",
     "build": "cross-env NEXT_TURBOPACK=0 next build",
@@ -10,6 +11,8 @@
   "engines": {
     "node": "18.x"
   },
+
+
   "dependencies": {
     "@sanity/client": "^7.11.2",
     "@sanity/icons": "^3.7.4",
