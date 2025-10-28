@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-   
     "dev": "next dev",
     "build": "cross-env NEXT_TURBOPACK=0 next build",
     "start": "next start"
-
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@sanity/client": "^7.11.2",
@@ -32,21 +33,19 @@
     "vercel.json": "^0.1.0",
     "zustand": "^5.0.8"
   },
-
   "browserslist": [
-  "last 2 Chrome versions",
-  "last 2 Firefox versions",
-  "last 2 Safari versions",
-  "last 2 Edge versions"
-],
-
-  
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ],
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/stripe": "^8.0.416",
+    "cross-env": "^10.1.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
