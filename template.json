@@ -1,0 +1,13 @@
+{
+  "name": "ecommerce-template",
+  "title": "Ecommerce Template (Next.js + Sanity)",
+  "description": "A ready-to-launch ecommerce site built with Next.js 15, Tailwind CSS, Sanity CMS, and Stripe integration.",
+  "repository": "https://github.com/joeljoy12/Ecommerce-template",
+  "owner": "joeljoy12",
+  "studio": {
+    "path": "studio"   // if your sanity.config.ts is inside /studio
+  },
+  "vercelDeploy": {
+    "repo": "https://github.com/joeljoy12/Ecommerce-template"
+  }
+}
