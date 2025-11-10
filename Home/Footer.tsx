@@ -74,7 +74,9 @@ export default function Footer() {
   }, [])
 
   const renderIcon = (icon: IconName, href: string, i: number) => {
-    const icons: Record<IconName, JSX.Element> = {
+  const icons: Record<IconName, React.ReactNode> = {
+
+
       facebook: <Facebook size={20} />,
       instagram: <Instagram size={20} />,
       twitter: <Twitter size={20} />,
