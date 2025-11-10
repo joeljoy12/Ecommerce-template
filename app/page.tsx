@@ -1,77 +1,113 @@
-import { client } from "@/sanity/lib/sanity.client"
 import Image from "next/image"
 import Home from "./Home"
+import { sanityFetch } from "@/sanity/lib/live"
 
-async function getHero() {
-  return client.fetch(`
-    *[_type == "hero"][0]{
-      heading,
-      subheading,
-      cta,
-      backgroundColor,
-      "imageUrl": image.asset->url
-    }
-  `)
-}
+const heroQuery = `
+  *[_type == "hero"][0]{
+    heading,
+    subheading,
+    cta,
+    backgroundColor,
+    "imageUrl": image.asset->url
+  }
+`
 
 export default async function Page() {
-  const hero = await getHero()
+  // ✅ Detect if we’re inside Sanity Studio
+  const isInsideStudio =
+    typeof window !== "undefined" && window.self !== window.top
+
+  // ✅ Fetch hero data (live-editable only inside Studio)
+  const { data: hero } = await sanityFetch({
+    query: heroQuery,
+    perspective: isInsideStudio ? "previewDrafts" : "published",
+  })
 
   if (!hero) {
     return <div className="text-center py-20">Hero section not set</div>
   }
 
   return (
-    <section style={{ backgroundColor: hero.backgroundColor || "#fff" }}>
-      <div className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 items-center gap-12">
-        {/* Left Side - Text */}
-        <div>
-          <h1 className="heading text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight text-[#111111] md:mt-18">
-            {hero.heading}
-          </h1>
-          <p className="text-base sm:text-lg text-[#6B7280] mb-8 max-w-md">
-            {hero.subheading}
-          </p>
-          {hero.cta && (
-            <a
-              href={hero.cta.href}
-              className="inline-block px-10 py-3 font-medium rounded-lg transition hover:scale-105"
-              style={{
-                backgroundColor: hero.cta.bgColor || "#D4AF37",
-                color: hero.cta.textColor || "#fff",
-              }}
-            >
-              {hero.cta.label}
-            </a>
-          )}
-        </div>
+    <section
+      className="relative w-full overflow-hidden"
+      style={{
+        backgroundColor: hero.backgroundColor?.hex || "#ffffff",
+      }}
+    >
+      <div className="container mx-auto px-6 md:px-12 lg:px-20 pt-24 md:pt-32 pb-24">
+        <div className="flex flex-wrap items-center -mx-4">
+          {/* 📝 Left Column (Text) */}
+          <div className="w-full px-4 lg:w-5/12">
+            <div className="space-y-6 text-center lg:text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111]">
+                {hero.heading}
+              </h1>
 
-        {/* Right Side - Image */}
-        {hero.imageUrl && (
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg aspect-square">
-              <Image
-                src={hero.imageUrl}
-                alt={hero.heading || "Hero image"}
-                fill
-                className="object-cover rounded-lg mt-10"
-                priority
-                  fetchPriority="high"
-              />
+              <p className="text-base sm:text-lg text-[#6B7280] max-w-md mx-auto lg:mx-0">
+                {hero.subheading}
+              </p>
+
+              {hero.cta && (
+                <a
+                  href={hero.cta.href}
+                  className="inline-block px-8 py-3 font-medium rounded-lg transition transform hover:scale-105"
+                  style={{
+                    backgroundColor: hero.cta.bgColor?.hex || "#D4AF37",
+                    color: hero.cta.textColor?.hex || "#fff",
+                  }}
+                >
+                  {hero.cta.label}
+                </a>
+              )}
             </div>
           </div>
-        )}
+
+          {/* Spacer (center gap for large screens) */}
+          <div className="hidden lg:block lg:w-1/12"></div>
+
+          {/* 🖼️ Right Column (Image) */}
+          {hero.imageUrl && (
+            <div className="w-full px-4 lg:w-6/12">
+              <div className="relative z-10 inline-block pt-10 lg:pt-0">
+                <Image
+                  src={hero.imageUrl}
+                  alt={hero.heading || "Hero image"}
+                  width={600}
+                  height={600}
+                  className="rounded-2xl shadow-md mx-auto lg:ml-auto"
+                  priority
+                />
+
+                {/* Decorative dotted background */}
+                <span className="absolute -bottom-8 -left-8 z-[-1]">
+                  <svg
+                    width="93"
+                    height="93"
+                    viewBox="0 0 93 93"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    {[...Array(5)].map((_, row) =>
+                      [...Array(5)].map((_, col) => (
+                        <circle
+                          key={`${row}-${col}`}
+                          cx={2.5 + 22 * col}
+                          cy={2.5 + 22 * row}
+                          r="2.5"
+                          fill="#D4AF37"
+                        />
+                      ))
+                    )}
+                  </svg>
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-     {/* 👇 Elegant gray border at the end */}
-
-
-
-
-
+      {/* 👇 Include your Home section after Hero */}
       <Home />
-
- 
     </section>
   )
 }

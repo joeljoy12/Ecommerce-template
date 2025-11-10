@@ -5,7 +5,7 @@
   "repository": "https://github.com/joeljoy12/Ecommerce-template",
   "owner": "joeljoy12",
   "studio": {
-    "path": "studio"   // if your sanity.config.ts is inside /studio
+    "path": "studio"   
   },
   "vercelDeploy": {
     "repo": "https://github.com/joeljoy12/Ecommerce-template"

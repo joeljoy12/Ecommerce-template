@@ -4,6 +4,11 @@ import Navbar from "@/Home/Navbar"
 import Footer from "@/Home/Footer"
 import { Inter, Playfair_Display } from "next/font/google"
 import { client } from "@/sanity/lib/sanity.client"
+ import { DisableDraftMode } from "./components/DisableDraftMode"
+ import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { SanityLive } from "@/sanity/lib/live"
+
 
 // ✅ Fetch dynamic SEO data from Sanity
 export async function generateMetadata(): Promise<Metadata> {
@@ -56,7 +61,7 @@ const playfair = Playfair_Display({
 })
 
 // ✅ Root layout component
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -86,6 +91,26 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+
+
+
+
+
+      <section>
+
+ {(await draftMode()).isEnabled && (
+        <>
+          <DisableDraftMode />
+          <VisualEditing />
+        </>
+      )}
+      <SanityLive />
+
+      </section>
+
+    
+
+
       </body>
     </html>
   )

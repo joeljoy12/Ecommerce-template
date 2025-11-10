@@ -1,29 +1,33 @@
-import { client } from "@/sanity/lib/sanity.client"
+import { sanityFetch } from "@/sanity/lib/live"
 import Image from "next/image"
 
-async function getAbout() {
-  return client.fetch(`
-    *[_type == "about"][0]{
-      title,
-      paragraphs,
-      ctaText,
-      ctaLink,
-      "imageUrl": image.asset->url
-    }
-  `)
-}
+const query = `
+  *[_type == "about"][0]{
+    title,
+    paragraphs,
+    ctaText,
+    ctaLink,
+    backgroundColor,
+    "imageUrl": image.asset->url
+  }
+`
 
 export default async function About() {
-  const about = await getAbout()
+  // ✅ Use live-enabled fetch
+  const { data: about } = await sanityFetch({ query })
 
   if (!about) {
     return <div className="text-center py-20">About section not set</div>
   }
 
   return (
-    <section className="bg-white py-20">
+    <section
+      className="py-20 transition-colors duration-300"
+      style={{
+        backgroundColor: about.backgroundColor?.hex || "#ffffff", // ✅ dynamic background
+      }}
+    >
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-        
         {/* Left - Image */}
         {about.imageUrl && (
           <div className="flex justify-center">
@@ -46,7 +50,10 @@ export default async function About() {
           </h2>
 
           {about.paragraphs?.map((para: string, idx: number) => (
-            <p key={idx} className="text-lg text-[#6B7280] leading-relaxed mb-6">
+            <p
+              key={idx}
+              className="text-lg text-[#6B7280] leading-relaxed mb-6"
+            >
               {para}
             </p>
           ))}
@@ -64,3 +71,4 @@ export default async function About() {
     </section>
   )
 }
+

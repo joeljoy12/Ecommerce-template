@@ -1,10 +1,13 @@
 'use client'
 
-import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
-import { structureTool } from 'sanity/structure'
+import { deskTool } from 'sanity/desk'
+import { visionTool } from '@sanity/vision'
+import { presentationTool } from 'sanity/presentation'
+import { colorInput } from '@sanity/color-input'
+
 import { apiVersion, dataset, projectId } from './sanity/env'
-import { schemaTypes } from './sanity/schemaTypes' 
+import { schemaTypes } from './sanity/schemaTypes'
 
 export default defineConfig({
   name: 'luxskin-store',
@@ -19,7 +22,15 @@ export default defineConfig({
   },
 
   plugins: [
-    structureTool(),
-    visionTool({ defaultApiVersion: apiVersion }),
+    deskTool(), // ✅ main content editor
+    colorInput(), // ✅ enables color picker
+    visionTool({ defaultApiVersion: apiVersion }), // ✅ query sandbox
+    presentationTool({
+      previewUrl: {
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
+      },
+    }),
   ],
 })

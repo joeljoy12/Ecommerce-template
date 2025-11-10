@@ -1,38 +1,56 @@
-export default {
+import { defineType, defineField } from "sanity"
+
+export default defineType({
   name: "navbar",
   title: "Navbar",
   type: "document",
   fields: [
-    { name: "backgroundColor", title: "Background Color", type: "string" },
-    { name: "textColor", title: "Text Color", type: "string" },
-    { name: "highlightColor", title: "Highlight Color", type: "string" },
-    { name: "highlightHover", title: "Highlight Hover Color", type: "string" },
-    {
+    defineField({
+      name: "backgroundColor",
+      title: "Background Color",
+      type: "color",
+    }),
+    defineField({
+      name: "textColor",
+      title: "Text Color",
+      type: "color",
+    }),
+    defineField({
+      name: "highlightColor",
+      title: "Highlight Color",
+      type: "color",
+    }),
+    defineField({
+      name: "highlightHover",
+      title: "Highlight Hover",
+      type: "color",
+    }),
+    defineField({
       name: "logo",
-      title: "Logo",
+      title: "Logo Text",
       type: "object",
       fields: [
-        { name: "highlight", title: "Highlight Part", type: "string" },
-        { name: "rest", title: "Rest of Logo", type: "string" },
+        { name: "highlight", type: "string", title: "Highlight Part" },
+        { name: "rest", type: "string", title: "Rest of Logo" },
       ],
-    },
-    {
+    }),
+    defineField({
       name: "links",
-      title: "Links",
+      title: "Navigation Links",
       type: "array",
       of: [
         {
           type: "object",
           fields: [
-            { name: "label", title: "Label", type: "string" },
-            { name: "href", title: "Href", type: "string" },
+            { name: "label", type: "string", title: "Label" },
+            { name: "href", type: "string", title: "Link" },
           ],
         },
       ],
-    },
-    {
+    }),
+    defineField({
       name: "cta",
-      title: "Call To Action",
+      title: "CTA Buttons",
       type: "object",
       fields: [
         {
@@ -40,8 +58,8 @@ export default {
           title: "Cart Button",
           type: "object",
           fields: [
-            { name: "label", title: "Label", type: "string" },
-            { name: "href", title: "Href", type: "string" },
+            { name: "label", type: "string", title: "Label" },
+            { name: "href", type: "string", title: "Href" },
           ],
         },
         {
@@ -49,12 +67,11 @@ export default {
           title: "Signup Button",
           type: "object",
           fields: [
-            { name: "label", title: "Label", type: "string" },
-            { name: "href", title: "Href", type: "string" },
+            { name: "label", type: "string", title: "Label" },
+            { name: "href", type: "string", title: "Href" },
           ],
         },
       ],
-    },
+    }),
   ],
-}
-
+})

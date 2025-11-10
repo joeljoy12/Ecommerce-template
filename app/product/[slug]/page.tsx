@@ -1,35 +1,32 @@
-import { client } from "@/sanity/lib/sanity.client"
+import { sanityFetch } from "@/sanity/lib/live"
 import ProductClient from "./ProductClient"
 
-async function getProduct(slug: string) {
-  return client.fetch(
-    `*[_type == "product" && slug.current == $slug][0]{
-      _id,
-      name,
-      price,
-      description,
-      "imageGallery": coalesce(imageGallery[].asset->url, [image.asset->url])
-    }`,
-    { slug }
-  )
-}
+const query = `
+  *[_type == "product" && slug.current == $slug][0]{
+    _id,
+    name,
+    price,
+    description,
+    "imageGallery": coalesce(imageGallery[].asset->url, [image.asset->url])
+  }
+`
 
-
-// ✅ FIXED: match Next.js 15.5 App Router typing
 export default async function ProductPage({
   params,
 }: {
   params: Promise<Record<string, string | string[] | undefined>>
 }) {
-  // ✅ Await the params Promise (same issue as before)
   const resolvedParams = await params
   const slug = resolvedParams?.slug as string
 
-  const product = await getProduct(slug)
+  // 🧠 Fetch product from Sanity Live Content API
+  const { data: product } = await sanityFetch({ query, params: { slug } })
 
+  // ⚙️ Fallback UI
   if (!product) {
-    return <p className="text-center mt-20">Product not found</p>
+    return <p className="text-center mt-20 text-gray-600">Product not found</p>
   }
 
+  // ✅ Pass live data to client component
   return <ProductClient product={product} quantity={1} />
 }

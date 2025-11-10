@@ -2,7 +2,6 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  
   "scripts": {
     "dev": "next dev",
     "build": "cross-env NEXT_TURBOPACK=0 next build",
@@ -11,13 +10,13 @@
   "engines": {
     "node": "22.x"
   },
-
-
   "dependencies": {
     "@sanity/client": "^7.11.2",
+    "@sanity/color-input": "^4.0.6",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.10.1",
+    "@sanity/visual-editing": "^4.0.0",
     "@stripe/stripe-js": "^7.9.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.22",
@@ -26,6 +25,7 @@
     "next": "^15.5.4",
     "next-sanity": "^11.4.2",
     "react": "19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "19.1.0",
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
