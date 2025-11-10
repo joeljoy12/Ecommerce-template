@@ -1,41 +1,26 @@
-import { sanityFetch } from "@/sanity/lib/live"
+"use client"
+
+import { useEffect, useState } from "react"
 import * as lucideIcons from "lucide-react"
-import { LucideIcon } from "lucide-react"
-import { DynamicIcon } from "lucide-react/dynamic" // optional (recommended)
+import { DynamicIcon } from "lucide-react/dynamic"
+import { sanityFetch } from "@/sanity/lib/live"
 
 const query = `
   *[_type == "benefit"][0]{
     title,
     backgroundColor,
-    items[]{
-      icon,
-      heading,
-      text
-    }
+    items[] { icon, heading, text }
   }
 `
 
-// ✅ Helper: convert dashed icon name to PascalCase for lucide-react
-function getLucideIcon(name: string): LucideIcon {
-  if (!name) return lucideIcons.Star
+export default function Benefits() {
+  const [benefits, setBenefits] = useState<any>(null)
 
-  const formatted = name
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join("")
+  useEffect(() => {
+    sanityFetch({ query }).then((res) => setBenefits(res.data))
+  }, [])
 
-  return (
-    (lucideIcons[formatted as keyof typeof lucideIcons] as LucideIcon) ??
-    lucideIcons.Star
-  )
-}
-
-export default async function Benefits() {
-  const { data: benefits } = await sanityFetch({ query })
-
-  if (!benefits) {
-    return <p className="text-center py-20">Benefits not set</p>
-  }
+  if (!benefits) return <p className="text-center py-20">Loading...</p>
 
   return (
     <section
@@ -46,31 +31,18 @@ export default async function Benefits() {
         <h2 className="text-3xl font-bold mb-12 heading">{benefits.title}</h2>
 
         <div className="grid md:grid-cols-3 gap-10">
-          {benefits.items?.map((item: any, index: number) => {
-            // ✅ If you want static icons:
-            const Icon = getLucideIcon(item.icon)
-
-            return (
-              <div key={index} className="p-4">
-                <div className="flex justify-center mb-4 text-[#D4AF37]">
-                  {/* Option 1: Static lucide-react */}
-                  {/* <Icon size={40} /> */}
-
-                  {/* ✅ Option 2: Dynamic import (smaller bundle) */}
-                  <DynamicIcon
-                    name={item.icon}
-                    size={40}
-                    color="#D4AF37"
-                  />
-                </div>
-
-                <h3 className="font-semibold text-xl heading text-[#111111]">
-                  {item.heading}
-                </h3>
-                <p className="text-[#6B7280] mt-2">{item.text}</p>
+          {benefits.items?.map((item: any, index: number) => (
+            <div key={index} className="p-4">
+              <div className="flex justify-center mb-4 text-[#D4AF37]">
+                <DynamicIcon name={item.icon} size={40} color="#D4AF37" />
               </div>
-            )
-          })}
+
+              <h3 className="font-semibold text-xl heading text-[#111111]">
+                {item.heading}
+              </h3>
+              <p className="text-[#6B7280] mt-2">{item.text}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

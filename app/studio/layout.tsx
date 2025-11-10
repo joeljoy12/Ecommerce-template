@@ -1,16 +1,34 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { client } from "@/sanity/lib/sanity.client"
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
   const [authorized, setAuthorized] = useState(false)
   const [input, setInput] = useState("")
+  const [correctPassword, setCorrectPassword] = useState<string | null>(null)
 
-  const correctPassword = process.env.NEXT_PUBLIC_STUDIO_PASSWORD || "luxskin123"
+  // ✅ Fetch password from Sanity
+  useEffect(() => {
+    async function fetchPassword() {
+      try {
+        const data = await client.fetch(`*[_type == "studioPassword"][0]{ password }`)
+        setCorrectPassword(data?.password || "luxskin123") // fallback if not set
+      } catch (err) {
+        console.error("Failed to fetch Studio password:", err)
+        setCorrectPassword("luxskin123")
+      }
+    }
+    fetchPassword()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (input === correctPassword) setAuthorized(true)
     else alert("Incorrect password")
+  }
+
+  if (correctPassword === null) {
+    return <div className="text-center py-20">Loading security settings...</div>
   }
 
   if (!authorized) {
@@ -20,7 +38,9 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-2xl shadow-xl border border-gray-200 text-center w-80"
         >
-          <h1 className="text-xl font-semibold text-gray-800 mb-4">Enter Admin Password</h1>
+          <h1 className="text-xl font-semibold text-gray-800 mb-4">
+            Enter Admin Password
+          </h1>
           <input
             type="password"
             placeholder="Password"

@@ -1,25 +1,23 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import Navbar from "@/Home/Navbar"
-import Footer from "@/Home/Footer"
 import { Inter, Playfair_Display } from "next/font/google"
 import { client } from "@/sanity/lib/sanity.client"
- import { DisableDraftMode } from "./components/DisableDraftMode"
- import { draftMode } from "next/headers";
-import { VisualEditing } from "next-sanity/visual-editing";
+import { draftMode } from "next/headers"
+import { DisableDraftMode } from "./components/DisableDraftMode"
+import { VisualEditing } from "next-sanity/visual-editing"
 import { SanityLive } from "@/sanity/lib/live"
+import ClientLayoutWrapper from "./components/ClientLayoutWrapper" 
 
-
-// ✅ Fetch dynamic SEO data from Sanity
+// ✅ Dynamic SEO
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await client.fetch(
-    `*[_type == "storeSettings"][0]{
+  const settings = await client.fetch(`
+    *[_type == "storeSettings"][0]{
       storeName,
       siteUrl,
       siteDescription,
       "ogImage": ogImage.asset->url
-    }`
-  )
+    }
+  `)
 
   const title = settings?.storeName || "Luxury Store"
   const description =
@@ -47,70 +45,27 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-// ✅ Self-hosted + non-blocking fonts
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap", // <-- crucial: prevents render blocking
-})
+// ✅ Self-hosted fonts
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap" })
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap", // <-- crucial: prevents render blocking
-})
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { isEnabled } = await draftMode()
 
-// ✅ Root layout component
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preload fonts early to boost LCP */}
-        <link
-          rel="preload"
-          href="/_next/static/media/inter-latin.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/playfair-display-latin.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-white text-gray-900`}
-      >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+      <body className={`${inter.variable} ${playfair.variable} antialiased bg-white text-gray-900`}>
+        {/* ✅ Wrap body with client layout (Navbar/Footer logic here) */}
+        <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 
-
-
-
-
-      <section>
-
- {(await draftMode()).isEnabled && (
-        <>
-          <DisableDraftMode />
-          <VisualEditing />
-        </>
-      )}
-      <SanityLive />
-
-      </section>
-
-    
-
-
+        {/* ✅ Draft / Visual Editing Tools */}
+        {isEnabled && (
+          <>
+            <DisableDraftMode />
+            <VisualEditing />
+          </>
+        )}
+        <SanityLive />
       </body>
     </html>
   )
