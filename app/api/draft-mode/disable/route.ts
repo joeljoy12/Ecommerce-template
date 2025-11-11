@@ -1,7 +1,8 @@
 import { draftMode } from "next/headers"
-import { NextResponse } from "next/server"
+import { redirect } from "next/navigation"
 
-export async  function  GET(request: Request) {
-  (await draftMode()).disable() 
-  return NextResponse.redirect(new URL("/", request.url))
+export async function GET() {
+  const dm = await draftMode()   // ✅ must await
+  dm.disable()
+  redirect("/")
 }
