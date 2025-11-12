@@ -1,7 +1,10 @@
-import { draftMode } from "next/headers"
-import { redirect } from "next/navigation"
+import { defineLive } from "next-sanity/live";
+import { client } from "./";
 
-export async function GET() {
-  draftMode().enable()
-  redirect("/") // change "/" to your home page or preview route if needed
-}
+const token = process.env.SANITY_VIEWER_TOKEN;
+
+export const { sanityFetch, SanityLive } = defineLive({
+  client,
+  serverToken: token,
+  browserToken: token,
+});
