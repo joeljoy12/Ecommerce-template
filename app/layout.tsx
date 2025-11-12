@@ -58,14 +58,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* ✅ Wrap body with client layout (Navbar/Footer logic here) */}
         <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 
-        {/* ✅ Draft / Visual Editing Tools */}
-  {isEnabled && (
-          <>
-            <DisableDraftMode />
-            <VisualEditing />
-          </>
-        )}
-        
+{isEnabled && process.env.NODE_ENV === "development" && (
+  <>
+    {/* Lazy import prevents any visual-editing code in prod bundle */}
+    {require("next-sanity/visual-editing").VisualEditing()}
+    <DisableDraftMode />
+  </>
+)}
+
 <SanityLive />
       </body>
     </html>
