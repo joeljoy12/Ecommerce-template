@@ -65,7 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <VisualEditing />
   </>
 )}
-
+<SanityLive />
       </body>
     </html>
   )
