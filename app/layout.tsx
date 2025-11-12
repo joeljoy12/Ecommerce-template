@@ -59,13 +59,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 
         {/* ✅ Draft / Visual Editing Tools */}
-        {isEnabled && (
-          <>
-            <DisableDraftMode />
-            <VisualEditing />
-          </>
-        )}
-        <SanityLive />
+{isEnabled && process.env.NODE_ENV === "development" && (
+  <>
+    <DisableDraftMode />
+    <VisualEditing />
+  </>
+)}
+
       </body>
     </html>
   )
