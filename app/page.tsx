@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Home from "./Home"
 import { sanityFetch } from "@/sanity/lib/live"
+import { draftMode } from "next/headers"
 
 const heroQuery = `
   *[_type == "hero"][0]{
@@ -18,9 +19,13 @@ export default async function Page() {
     typeof window !== "undefined" && window.self !== window.top
 
   // ✅ Fetch hero data (live-editable only inside Studio)
+
+
+ const { isEnabled } = await draftMode() // ✅ true only during preview sessions
+
   const { data: hero } = await sanityFetch({
     query: heroQuery,
-    perspective: isInsideStudio ? "previewDrafts" : "published",
+    perspective: isEnabled ? "previewDrafts" : "published",
   })
 
   if (!hero) {
