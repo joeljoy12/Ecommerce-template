@@ -59,13 +59,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* ✅ Wrap body with client layout (Navbar/Footer logic here) */}
         <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 
-{isEnabled && process.env.NODE_ENV === "development" && (
+{isEnabled && (
   <>
     <DisableDraftMode />
     <VisualEditing />
   </>
 )}
-
 
 <SanityLive />
       </body>
