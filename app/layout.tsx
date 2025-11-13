@@ -51,6 +51,7 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
+  const isStudio = process.env.NEXT_PUBLIC_SANITY_STUDIO === "true"
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -58,11 +59,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* ✅ Wrap body with client layout (Navbar/Footer logic here) */}
         <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
 
-{isEnabled && process.env.NODE_ENV === "development" && (
+{isEnabled && isStudio && (
   <>
-    {/* Lazy import prevents any visual-editing code in prod bundle */}
-    {require("next-sanity/visual-editing").VisualEditing()}
     <DisableDraftMode />
+    <VisualEditing />
   </>
 )}
 
