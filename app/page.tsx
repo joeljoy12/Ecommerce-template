@@ -40,7 +40,7 @@ export default async function Page() {
 {/*=======================================   📝 Left Column (Text)     ======================================================= */ }
          
          
-          <div className="w-full px-4 lg:w-5/12  ">
+          <div className="w-full px-4 lg:w-5/12 lg:mt-20  lg:ml-14">
             <div className="space-y-6 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111] ">
                 {hero.heading}
