@@ -34,6 +34,20 @@ export default defineType({
       options: { hotspot: true },
     }),
 
+    defineField({
+    name: "cta2",
+    title: "Secondary Button",
+    type: "object",
+    fields: [
+      { name: "label", title: "Label", type: "string" },
+      { name: "href", title: "Link", type: "url" },
+      { name: "bgColor", title: "Background Color", type: "color" },
+      { name: "textColor", title: "Text Color", type: "string" },
+    ],
+  }),
+
+      // ⭐ NEW SECOND BUTTON
+  
     // ✅ Color picker field
     defineField({
       name: "backgroundColor",
@@ -41,6 +55,9 @@ export default defineType({
       type: "color", // <--- changed from string
     }),
   ],
+
+    // ⭐ NEW SECOND BUTTON
+
 
   preview: {
     select: {

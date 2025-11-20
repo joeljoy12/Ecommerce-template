@@ -7,6 +7,7 @@ const heroQuery = `
     heading,
     subheading,
     cta,
+    cta2,
     backgroundColor,
     "imageUrl": image.asset->url
   }
@@ -62,6 +63,23 @@ export default async function Page() {
                   {hero.cta.label}
                 </a>
               )}
+
+
+               {/* Secondary CTA */}
+  {hero.cta2 && (
+    <a
+      href={hero.cta2.href}
+      className="inline-block px-8 py-3 font-medium rounded-lg transition transform hover:scale-105 border ml-2"
+      style={{
+        backgroundColor: hero.cta2.bgColor?.hex || "#fff",
+        color: hero.cta2.textColor?.hex || "#111",
+      }}
+    >
+      {hero.cta2.label}
+    </a>
+  )}
+
+
             </div>
           </div>
 
