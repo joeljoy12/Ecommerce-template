@@ -3,7 +3,7 @@ import imageUrlBuilder from "@sanity/image-url"
 
 
 export const client = createClient({
-  projectId: "su0ct7ds",   // 👈 get this from sanity.config.ts
+  projectId: "ng6tnxid",   // 👈 get this from sanity.config.ts
   dataset: "production",
   apiVersion: "2023-01-01",       // use today’s date or a recent stable one
   useCdn: true

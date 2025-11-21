@@ -15,24 +15,27 @@ export default function OrderDetailsPage() {
     const fetchOrder = async () => {
       try {
         setLoading(true)
-        const data = await client.fetch(
-          `*[_type == "order" && (stripeSessionId == $id || _id == $id)][0]{
-            _id,
-            stripeSessionId,
-            email,
-            total,
-            status,
-            createdAt,
-            estimatedDelivery,
-            items[]{
-              name,
-              imageUrl,
-              quantity,
-              price
-            }
-          }`,
-          { id }
-        )
+       const data = await client
+  .withConfig({ useCdn: false })
+  .fetch(
+    `*[_type == "order" && (stripeSessionId == $id || _id == $id)][0]{
+      _id,
+      stripeSessionId,
+      email,
+      total,
+      status,
+      createdAt,
+      estimatedDelivery,
+      items[]{
+        name,
+        imageUrl,
+        quantity,
+        price
+      }
+    }`,
+    { id }
+  )
+
 
         if (!data) {
           setError("Order not found.")

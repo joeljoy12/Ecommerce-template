@@ -25,19 +25,21 @@ export default function MyOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const data = await client.fetch(`
-          *[_type == "order"] | order(createdAt desc){
-            _id,
-            stripeSessionId,
-            total,
-            status,
-            createdAt,
-            items[] {
-              name,
-              imageUrl
-            }
-          }
-        `)
+ const data = await client
+  .withConfig({ useCdn: false })
+  .fetch(`*[_type == "order"] | order(createdAt desc){
+    _id,
+    stripeSessionId,
+    total,
+    status,
+    createdAt,
+    items[]{
+      name,
+      imageUrl
+    }
+  }`)
+
+
 
         const formatted = data.map((order: any) => ({
           id: order.stripeSessionId || order._id,
