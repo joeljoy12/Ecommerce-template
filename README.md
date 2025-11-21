@@ -1,229 +1,68 @@
-🛍️ Luxury Store – Modern E-Commerce Template
-
-A full-featured, production-ready e-commerce website built with Next.js 15, Sanity CMS, and Stripe.
-Includes a dynamic CMS, secure checkout, real-time order tracking, and live content editing through Sanity Studio.
-
-🚀 Features
-🎨 CMS Powered
-
-Dynamic Hero Section
-
-Product Collections
-
-Fully editable Navbar & Footer
-
-Benefits section
-
-Store settings, SEO, OpenGraph
-
-💳 Payments
-
-Stripe checkout
-
-Order summary
-
-Success & cancellation page
-
-📦 Orders & Tracking
-
-Track-by-ID feature
-
-Live order status
-
-Sanity-powered order dashboard
-
-⚡ Performance & UX
-
-Next.js App Router
-
-Server Components
-
-Optimized images
-
-SEO metadata
-
-Responsive Tailwind design
-
-🛠 Developer Experience
-
-Clean, modern folder structure
-
-Sanity Live Content Editing
-
-Fully typed with TypeScript
-
-Vercel-ready deployment
-
-🧱 Tech Stack
-Category	Technology
-Frontend	Next.js 15 (App Router)
-CMS	Sanity.io v3
-Payments	Stripe
-Styling	Tailwind CSS
-Icons	Lucide React
-Hosting	Vercel
-Language	TypeScript
-Images	Next.js Image Optimization
-⚙️ Installation & Setup
-1️⃣ Clone the repository
-git clone https://github.com/joeljoy12/Ecommerce-template.git
-cd Ecommerce-template
-
-2️⃣ Install dependencies
-npm install
-
-3️⃣ Create your .env.local
-
-Create a file:
-
-.env.local
-
-
-Add the following:
-
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_SANITY_API_VERSION=2023-10-01
-
-SANITY_WRITE_TOKEN=your_sanity_token
-SANITY_VIEWER_TOKEN=your_sanity_token
-
-STRIPE_SECRET_KEY=your_stripe_secret
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
-
-🔑 Sanity Token
-
-Generate it from:
-
-https://www.sanity.io/manage
- → API → Tokens
-
-Select:
-
-Read + Write
-
-"Editor" Role
-
-🏗️ 4️⃣ Start the development server
-npm run dev
-
-
-Your site →
-http://localhost:3000
-
-Sanity Studio →
-http://localhost:3000/studio
-
-🏬 Sanity Setup
-Create a new Sanity project:
-npm create sanity@latest
-
-
-Then copy:
-
-projectId
-dataset
-apiVersion
-token
-
-
-into .env.local.
-
-🧾 Stripe Setup
-1. Login to Stripe Dashboard
-
-https://dashboard.stripe.com/
-
-2. Create API keys
-
-Secret Key
-
-Publishable Key
-
-3. Add Webhook
-
-URL:
-
-https://your-site.com/api/stripe/webhook
-
-
-Events needed:
-
-checkout.session.completed
-
-🚀 Deployment (Vercel)
-1. Push to GitHub
-git add .
-git commit -m "Initial release"
-git push origin main
-
-2. Connect repo to Vercel
-
-https://vercel.com/new
-
-3. Add environment variables
-
-Copy all from .env.local.
-
-4. Deploy 🎉
-🔐 Optional Add-On: Authentication Pack
-
-This template supports an optional NextAuth Authentication Add-On, including:
-
-Login
-
-Register
-
-Protected Checkout
-
-User Dashboard
-
-Logout
-
-Google OAuth
-
-This version is sold separately as an add-on.
-
-📁 Folder Structure
-.
-├── app/
-│   ├── page.tsx
-│   ├── product/[slug]/
-│   ├── checkout/
-│   ├── success/
-│   ├── track-order/
-│   ├── studio/
-│   └── api/
-│        ├── stripe/
-│        └── preview/
-│
-├── sanity/
-│   ├── schemas/
-│   ├── config.ts
-│   └── lib/
-│
-├── components/
-├── public/
-├── styles/
-└── utils/
-
-🖼 Screenshots
-
-Add your images here:
-
-/public/preview.png
-/public/hero.png
-/public/products.png
-
-🤝 Contributing
-
-Feel free to submit issues or PRs to improve the template.
-
-📄 License
-
-MIT License — free for personal and commercial use.
-Selling copies or reselling the code as-is requires attribution.
-
-⭐ Feedback / Support
-
-If you need help integrating payments, auth add-ons, or CMS customizations, reach out anytime.
+# 🛍️ Luxury Store – Modern E-Commerce Template
+
+A full-featured, production-ready e-commerce website built with **Next.js 15**, **Sanity CMS**, and **Stripe**.  
+Includes dynamic CMS content, secure checkout, live order tracking, and instant editing through Sanity Studio.
+
+Perfect for founders, indie builders, agencies, and developers who want to launch a modern e-commerce store quickly.
+
+---
+
+# 🚀 Features
+
+## 🎨 CMS Powered (Sanity)
+- Dynamic Hero Section  
+- Product Collections  
+- Fully editable Navbar & Footer  
+- Benefits section  
+- Store Settings, SEO, OpenGraph  
+- Real-time content preview  
+- Sanity Studio included
+
+## 💳 Payments (Stripe)
+- Hosted checkout (Stripe Checkout)
+- Order summary + detailed cart
+- Success & Cancel pages
+- PCI compliant, secure, fast
+
+## 📦 Orders & Tracking
+- Sanity-based Order DB  
+- Track Order by ID  
+- Real-time status updates  
+- Processing → Shipped → Delivered  
+- Order history page
+
+## ⚡ Performance & UX
+- Next.js App Router (v15)
+- Server Components + Streaming
+- Optimized images
+- Fast SEO-ready pages
+- Fully responsive Tailwind design
+
+## 🛠 Developer Experience
+- Clean, modern folder structure  
+- TypeScript  
+- Sanity Visual Editing  
+- API routes included  
+- Vercel-ready deployment  
+
+---
+
+# 🧱 Tech Stack
+
+| Category   | Technology           |
+|------------|-----------------------|
+| Frontend   | Next.js 15 (App Router) |
+| CMS        | Sanity v3             |
+| Payments   | Stripe                |
+| Styling    | Tailwind CSS          |
+| Icons      | Lucide React          |
+| Hosting    | Vercel                |
+| Language   | TypeScript            |
+
+---
+
+# ⚙️ Installation & Setup
+
+After purchasing the template on Gumroad, download the ZIP file:
+
+1. **Extract the ZIP**
