@@ -41,8 +41,8 @@ export default async function Page() {
 {/*=======================================   📝 Left Column (Text)     ======================================================= */ }
          
          
-          <div className="w-full px-4 lg:w-5/12 ">
-            <div className="space-y-6 text-center lg:text-left lg:ml-10">
+          <div className="w-full px-4 lg:w-5/12 lg:mb-28 ">
+            <div className="space-y-6 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111] ">
                 {hero.heading}
               </h1>
@@ -89,13 +89,13 @@ export default async function Page() {
 
           {/* 🖼️ Right Column (Image) */}
           {hero.imageUrl && (
-            <div className="w-full px-4 lg:w-6/12 ">
-              <div className="relative z-10 inline-block pt-10 lg:pt-0 lg:ml-8">
+            <div className="w-full px-4 lg:w-6/12">
+              <div className="relative z-10 inline-block pt-10 lg:pt-0">
                <Image
   src={hero.imageUrl}
   alt={hero.heading || "Hero image"}
-  width={400}
-  height={200}
+  width={600}
+  height={600}
   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
   className="rounded-2xl shadow-md mx-auto lg:ml-auto"
   priority
