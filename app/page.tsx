@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Home from "./Home"
 import { sanityFetch } from "@/sanity/lib/live"
+import { draftMode } from "next/headers"
 
 const heroQuery = `
   *[_type == "hero"][0]{
@@ -14,14 +15,13 @@ const heroQuery = `
 `
 
 export default async function Page() {
-  // ✅ Detect if we’re inside Sanity Studio
-  const isInsideStudio =
-    typeof window !== "undefined" && window.self !== window.top
+  // ✅ Check if draft mode is enabled
+  const { isEnabled } = await draftMode()
 
-  // ✅ Fetch hero data (live-editable only inside Studio)
+  // ✅ Fetch hero data (live-editable only in draft mode)
   const { data: hero } = await sanityFetch({
     query: heroQuery,
-    perspective: isInsideStudio ? "previewDrafts" : "published",
+    perspective: isEnabled ? "previewDrafts" : "published",
   })
 
   if (!hero) {
@@ -41,7 +41,7 @@ export default async function Page() {
 {/*=======================================   📝 Left Column (Text)     ======================================================= */ }
          
          
-          <div className="w-full px-4 lg:w-5/12 lg:mb-28 ">
+          <div className="w-full px-4 lg:w-5/12 lg:mb-30 lg:mb-[30%]">
             <div className="space-y-6 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111] ">
                 {hero.heading}
