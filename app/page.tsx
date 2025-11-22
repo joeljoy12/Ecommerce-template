@@ -90,12 +90,11 @@ export default async function Page() {
           {/* 🖼️ Right Column (Image) */}
           {hero.imageUrl && (
             <div className="w-full px-4 lg:w-6/12">
-              <div className="relative z-10 inline-block pt-10 lg:pt-0">
+             <div className="relative w-full max-w-md aspect-[4/5] mx-auto lg:ml-auto">
                <Image
   src={hero.imageUrl}
   alt={hero.heading || "Hero image"}
-  width={600}
-  height={600}
+  fill
   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
   className="rounded-2xl shadow-md mx-auto lg:ml-auto"
   priority
