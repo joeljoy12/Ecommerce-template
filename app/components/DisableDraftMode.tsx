@@ -1,6 +1,7 @@
 "use client";
 
 import { useDraftModeEnvironment } from "next-sanity/hooks";
+import { useRouter, usePathname } from "next/navigation";
 
 export function DisableDraftMode() {
   const environment = useDraftModeEnvironment();
@@ -9,6 +10,13 @@ export function DisableDraftMode() {
   if (environment !== "live" && environment !== "unknown") {
     return null;
   }
+
+   const pathname = usePathname()
+   
+   if (!pathname.startsWith("/studio")) {
+    return null
+  }
+
 
   return (
    <a
