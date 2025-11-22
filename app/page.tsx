@@ -42,7 +42,7 @@ export default async function Page() {
          
          
           <div className="w-full px-4 lg:w-5/12 lg:mb-30 ">
-            <div className="space-y-6 text-center lg:text-left lg:ml-8">
+            <div className="space-y-6 text-center lg:text-left lg:ml-10">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111] ">
                 {hero.heading}
               </h1>
