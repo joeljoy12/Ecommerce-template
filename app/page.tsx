@@ -41,8 +41,8 @@ export default async function Page() {
 {/*=======================================   📝 Left Column (Text)     ======================================================= */ }
          
          
-          <div className="w-full px-4 lg:w-5/12 lg:mb-30 lg:mb-[30%]">
-            <div className="space-y-6 text-center lg:text-left">
+          <div className="w-full px-4 lg:w-5/12 lg:mb-30 ">
+            <div className="space-y-6 text-center lg:text-left lg:ml-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-[#111111] ">
                 {hero.heading}
               </h1>
@@ -88,17 +88,46 @@ export default async function Page() {
           <div className="hidden lg:block lg:w-1/12"></div>
 
           {/* 🖼️ Right Column (Image) */}
-          {hero.imageUrl && (
-            <div className="w-full px-4 lg:w-6/12">
-             <div className="relative w-full max-w-md aspect-[4/5] mx-auto lg:ml-auto">
-               <Image
-  src={hero.imageUrl}
-  alt={hero.heading || "Hero image"}
-  fill
-  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-  className="rounded-2xl shadow-md mx-auto lg:ml-auto"
-  priority
-/>
+          
+      {hero.imageUrl && (
+  <div className="w-full px-4 lg:w-6/12">
+    <div className="relative w-full max-w-md aspect-[4/5] mx-auto lg:ml-auto">
+
+      {/* Constant fixed-ratio image */}
+      <Image
+        src={hero.imageUrl}
+        alt={hero.heading || "Hero image"}
+        fill
+        className="object-cover rounded-2xl shadow-md"
+        priority
+      />
+
+      {/* Decorative dots */}
+      <span className="absolute -bottom-8 -left-8 z-[-1]">
+        <svg
+          width="93"
+          height="93"
+          viewBox="0 0 93 93"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {[...Array(5)].map((_, row) =>
+            [...Array(5)].map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={2.5 + 22 * col}
+                cy={2.5 + 22 * row}
+                r="2.5"
+                fill="#D4AF37"
+              />
+            ))
+          )}
+        </svg>
+      </span>
+
+    </div>
+  </div>
+)}
 
 
   {/*====================================================v Decorative dotted background   =======================================  */}
@@ -125,9 +154,7 @@ export default async function Page() {
                 </span>
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          
 
       {/* 👇==========================================     Include your Home section after Hero    ========================================== */}
       <Home />
