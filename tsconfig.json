@@ -38,7 +38,12 @@
     "app/product/[slug]/AddToCart.tsx",
     "app/api/checkout/route.tsx",
     "Home/Navbar.tsx",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "sanity.config.ts",
+    "sanity.cli.ts",
+    "next.config.tjs",
+    "next.config.mjs",
+    "next.config.js"
   ],
   "exclude": [
     "node_modules"

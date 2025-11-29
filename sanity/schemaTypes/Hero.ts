@@ -1,5 +1,4 @@
 import { defineType, defineField } from "sanity"
-import { colorInput } from "@sanity/color-input"
 
 export default defineType({
   name: "hero",
@@ -11,14 +10,16 @@ export default defineType({
       title: "Heading",
       type: "string",
     }),
+
     defineField({
       name: "subheading",
       title: "Subheading",
       type: "text",
     }),
+
     defineField({
       name: "cta",
-      title: "Call To Action",
+      title: "Primary Button",
       type: "object",
       fields: [
         { name: "label", title: "Label", type: "string" },
@@ -27,6 +28,33 @@ export default defineType({
         { name: "textColor", title: "Text Color", type: "string" },
       ],
     }),
+
+    defineField({
+      name: "cta2",
+      title: "Secondary Button",
+      type: "object",
+      fields: [
+        { name: "label", title: "Label", type: "string" },
+
+        {
+          name: "href",
+          title: "Internal Link",
+          type: "string",
+          description: "Only internal routes like /shop, /contact, /products/1",
+          validation: (rule) =>
+            rule
+              .regex(/^\/(?!\/)/, {
+                name: "internalLink",
+                invert: false,
+              })
+              .error("Must start with a single slash (/). Example: /shop")
+        },
+
+        { name: "bgColor", title: "Background Color", type: "color" },
+        { name: "textColor", title: "Text Color", type: "string" },
+      ],
+    }),
+
     defineField({
       name: "image",
       title: "Hero Image",
@@ -34,42 +62,12 @@ export default defineType({
       options: { hotspot: true },
     }),
 
-   defineField({
-  name: "cta2",
-  title: "Secondary Button",
-  type: "object",
-  fields: [
-    { name: "label", title: "Label", type: "string" },
-
-    {
-      name: "href",
-      title: "Internal Link",
-      type: "string",
-      description: "Only internal routes like /shop, /contact, /products/1",
-      validation: (Rule) =>
-     Rule.regex(/^\/(?!\/)/, "internalLink").error(
-  "Must start with a single slash (/). Example: /shop"
-)
-
-    },
-
-    { name: "bgColor", title: "Background Color", type: "color" },
-    { name: "textColor", title: "Text Color", type: "string" },
-  ],
-}),
-
-      // ⭐ NEW SECOND BUTTON
-  
-    // ✅ Color picker field
     defineField({
       name: "backgroundColor",
       title: "Background Color",
-      type: "color", // <--- changed from string
+      type: "color",
     }),
   ],
-
-    // ⭐ NEW SECOND BUTTON
-
 
   preview: {
     select: {

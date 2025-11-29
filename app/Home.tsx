@@ -1,4 +1,4 @@
-import React from 'react'
+
 import Navbar from '../Home/Navbar'
 import Benifits from '../Home/Benifits'
 import FeaturedProducts from '../Home/FeaturedProduct'

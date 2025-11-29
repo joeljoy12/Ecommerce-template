@@ -11,22 +11,36 @@ export default defineType({
       name: "backgroundColor",
       title: "Background Color",
       type: "color",
-      description: "Controls the background color of the footer section.",
     }),
     defineField({
       name: "textColor",
       title: "Text Color",
       type: "color",
-      description: "Color used for footer text.",
     }),
     defineField({
       name: "borderColor",
       title: "Border Color",
       type: "color",
-      description: "Color for the top border of the footer.",
     }),
 
-    // 🏷️ Brand Information
+    // ⭐ NEW — Footer Logo Upload Field
+    defineField({
+      name: "footerLogo",
+      title: "Footer Logo",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+        }),
+      ],
+    }),
+
+    // 🏷️ Brand Info
     defineField({
       name: "brand",
       title: "Brand Info",
@@ -42,7 +56,6 @@ export default defineType({
           name: "description",
           title: "Description",
           type: "text",
-          description: "A short tagline or sentence about your brand.",
         }),
       ],
     }),
@@ -53,18 +66,19 @@ export default defineType({
       title: "Quick Links",
       type: "array",
       of: [
-        {
+        defineField({
+          name: "linkItem",
+          title: "Link Item",
           type: "object",
           fields: [
             { name: "label", title: "Label", type: "string" },
-            { name: "href", title: "Href (URL or Anchor)", type: "string" },
+            { name: "href", title: "Href", type: "string" },
           ],
-          preview: { select: { title: "label", subtitle: "href" } },
-        },
+        }),
       ],
     }),
 
-    // 📨 Newsletter Section
+    // 📨 Newsletter
     defineField({
       name: "newsletter",
       title: "Newsletter",
@@ -77,13 +91,15 @@ export default defineType({
       ],
     }),
 
-    // 🌐 Social Links
+    // 🌐 Social Media
     defineField({
       name: "socials",
       title: "Social Links",
       type: "array",
       of: [
-        {
+        defineField({
+          name: "socialItem",
+          title: "Social Link",
           type: "object",
           fields: [
             {
@@ -97,12 +113,10 @@ export default defineType({
             },
             { name: "href", title: "Link", type: "url" },
           ],
-          preview: { select: { title: "icon", subtitle: "href" } },
-        },
+        }),
       ],
     }),
 
-    // ⚖️ Copyright
     defineField({
       name: "copyright",
       title: "Copyright Text",
@@ -110,14 +124,10 @@ export default defineType({
     }),
   ],
 
-  // 🧭 Preview
   preview: {
-    select: { title: "brand.name", subtitle: "copyright" },
-    prepare({ title, subtitle }: { title?: string; subtitle?: string }) {
-      return {
-        title: title || "Footer Section",
-        subtitle: subtitle || "No copyright text set",
-      }
+    select: {
+      title: "brand.name",
+      subtitle: "copyright",
     },
   },
 })

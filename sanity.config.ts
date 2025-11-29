@@ -1,5 +1,4 @@
-'use client'
-
+"use client"
 import { defineConfig } from 'sanity'
 import { deskTool } from 'sanity/desk'
 import { visionTool } from '@sanity/vision'
@@ -22,9 +21,9 @@ export default defineConfig({
   },
 
   plugins: [
-    deskTool(), // ✅ main content editor
-    colorInput(), // ✅ enables color picker
-    visionTool({ defaultApiVersion: apiVersion }), // ✅ query sandbox
+    deskTool(),
+    colorInput(),       // ← REQUIRED for "color" fields to work
+    visionTool({ defaultApiVersion: apiVersion }),
     presentationTool({
       previewUrl: {
         previewMode: {

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { sanityFetch } from "@/sanity/lib/live"
 
+
 const query = `
   *[_type == "navbar"][0]{
     backgroundColor,
@@ -12,9 +13,12 @@ const query = `
     highlightHover,
     logo,
     links,
-    cta
+    cta,
+    "logoUrl": logoImage.asset->url,
+    "logoAlt": logoImage.alt
   }
 `
+
 
 // 🎨 LuxSkin Fallback (from your JSON)
 const fallbackNavbar = {
@@ -75,16 +79,26 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto flex flex-wrap p-5 flex-row items-center justify-between">
         {/* 🪞 Logo */}
-        <Link
-          href="/"
-          className="flex items-center font-bold text-2xl tracking-tight"
-          style={{ color: text }}
-        >
-          <span style={{ color: highlight }}>
-            {navbar.logo?.highlight || "Lux"}
-          </span>
-          {navbar.logo?.rest || "Skin"}
-        </Link>
+        <Link href="/" className="flex items-center">
+  {navbar.logoUrl ? (
+    <img
+      src={navbar.logoUrl}
+      alt={navbar.logoAlt || "Logo"}
+      className="h-10 w-auto object-contain"
+    />
+  ) : (
+    <span
+      className="font-bold text-2xl tracking-tight"
+      style={{ color: text }}
+    >
+      <span style={{ color: highlight }}>
+        {navbar.logo?.highlight || "Lux"}
+      </span>
+      {navbar.logo?.rest || "Skin"}
+    </span>
+  )}
+</Link>
+
 
         {/* 🖥 Desktop Nav */}
         <nav

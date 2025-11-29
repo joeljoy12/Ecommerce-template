@@ -48,6 +48,26 @@ export default defineType({
         },
       ],
     }),
+
+
+    defineField({
+  name: "logoImage",
+  title: "Logo Image",
+  type: "image",
+  options: {
+    hotspot: true,
+  },
+  fields: [
+    defineField({
+      name: "alt",
+      type: "string",
+      title: "Alt Text",
+    }),
+  ],
+}),
+
+
+
     defineField({
       name: "cta",
       title: "CTA Buttons",

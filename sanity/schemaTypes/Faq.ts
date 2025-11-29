@@ -69,14 +69,5 @@ export default defineType({
   ],
 
   // 🧭 Preview in Studio
-  preview: {
-    select: { title: "title", faqs: "faqs" },
-    prepare({ title, faqs }) {
-      const count = faqs?.length || 0
-      return {
-        title: title || "FAQ Section",
-        subtitle: `${count} question${count === 1 ? "" : "s"}`,
-      }
-    },
-  },
+
 })

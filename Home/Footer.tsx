@@ -16,9 +16,12 @@ const query = `
     links,
     newsletter,
     socials,
-    copyright
+    copyright,
+    "footerLogoUrl": footerLogo.asset->url,
+    "footerLogoAlt": footerLogo.alt
   }
 `
+
 
 // ✅ Demo fallback footer (used if Sanity data missing)
 const fallbackFooter = {
@@ -106,10 +109,20 @@ export default function Footer() {
     >
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10">
         {/* 🏷 Brand Info */}
-        <div>
-          <h3 className="text-xl font-bold mb-4">{footer.brand?.name}</h3>
-          <p className="text-[#333333]">{footer.brand?.description}</p>
-        </div>
+   
+<div>
+  {footer.footerLogoUrl ? (
+    <img
+      src={footer.footerLogoUrl}
+      alt={footer.footerLogoAlt || footer.brand?.name}
+      className="h-12 w-auto object-contain mb-4"
+    />
+  ) : (
+    <h3 className="text-xl font-bold mb-4">{footer.brand?.name}</h3>
+  )}
+
+  <p className="text-[#333333]">{footer.brand?.description}</p>
+</div>
 
         {/* 🔗 Quick Links */}
         <div>
