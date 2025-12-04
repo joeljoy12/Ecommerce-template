@@ -42,11 +42,5 @@ export default {
       description: "Mark this to show in the Featured Products section",
     },
   ],
-  preview: {
-    select: {
-      title: "name",
-      subtitle: "price",
-      media: "image",
-    },
-  },
+ 
 }

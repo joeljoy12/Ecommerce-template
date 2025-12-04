@@ -50,7 +50,7 @@ export default defineType({
           name: "name",
           title: "Brand Name",
           type: "string",
-          validation: (rule) => rule.required(),
+          
         }),
         defineField({
           name: "description",

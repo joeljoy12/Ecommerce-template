@@ -35,7 +35,7 @@ export default defineType({
               title: "Icon",
               type: "string",
               description: "Choose an icon from Lucide React",
-              components: { input: IconSelector as any }, // cast to any to satisfy Sanity's StringInputProps typing
+             components: { input: IconSelector as any },  // cast to any to satisfy Sanity's StringInputProps typing
             }),
             defineField({
               name: "heading",
@@ -47,34 +47,10 @@ export default defineType({
               title: "Text",
               type: "text",
             }),
-          ],
-
-          // ✅ Optional: add item-level preview
-          preview: {
-            select: { title: "heading", icon: "icon" },
-            prepare({ title, icon }) {
-              return {
-                title: title || "Untitled Benefit",
-                subtitle: icon ? `Icon: ${icon}` : "No icon selected",
-              }
-            },
-          },
+          ]
         }),
       ],
     }),
   ],
 
-  preview: {
-    select: {
-      title: "title",
-      items: "items",
-    },
-    prepare({ title, items }) {
-      const count = items?.length || 0
-      return {
-        title: title || "Benefits Section",
-        subtitle: `${count} benefit${count === 1 ? "" : "s"}`,
-      }
-    },
-  },
 })

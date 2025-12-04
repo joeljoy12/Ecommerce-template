@@ -9,20 +9,20 @@ export default {
       name: "name",
       title: "Product Name",
       type: "string",
-      validation: (Rule: Rule) => Rule.required(),
+     
     },
     {
       name: "slug",
       title: "Slug",
       type: "slug",
       options: { source: "name", maxLength: 96 },
-      validation: (Rule: Rule) => Rule.required(),
+     
     },
     {
       name: "price",
       title: "Price",
       type: "number",
-      validation: (Rule: Rule) => Rule.min(0),
+      
     },
     {
       name: "imageGallery",
@@ -42,7 +42,7 @@ export default {
           ],
         },
       ],
-      validation: (Rule: Rule) => Rule.min(1).error("At least one image is required"),
+      
     },
     {
       name: "description",
@@ -61,11 +61,4 @@ export default {
       description: "Show this product in Featured section",
     },
   ],
-  preview: {
-    select: {
-      title: "name",
-      subtitle: "price",
-      media: "imageGallery.0", // ✅ first image as preview
-    },
-  },
 }

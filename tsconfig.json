@@ -39,7 +39,7 @@
     "app/api/checkout/route.tsx",
     "Home/Navbar.tsx",
     ".next/dev/types/**/*.ts",
-    "sanity.config.ts",
+    "app/studio/sanity.config.ts",
     "sanity.cli.ts",
     "next.config.tjs",
     "next.config.mjs",

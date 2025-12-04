@@ -5,8 +5,8 @@ import { visionTool } from '@sanity/vision'
 import { presentationTool } from 'sanity/presentation'
 import { colorInput } from '@sanity/color-input'
 
-import { apiVersion, dataset, projectId } from './sanity/env'
-import { schemaTypes } from './sanity/schemaTypes'
+import { apiVersion, dataset, projectId } from '../../sanity/env'
+import { schemaTypes } from '../../sanity/schemaTypes'
 
 export default defineConfig({
   name: 'luxskin-store',

@@ -48,19 +48,4 @@ export default defineType({
       description: "Choose a background color for the About section",
     }),
   ],
-
-  preview: {
-    select: {
-      title: "title",
-      image: "image",
-      bg: "backgroundColor",
-    },
-    prepare({ title, image, bg }) {
-      return {
-        title: title || "Untitled About Section",
-        subtitle: bg ? `Background: ${bg.hex}` : "No background color set",
-        media: image,
-      }
-    },
-  },
 })

@@ -41,13 +41,6 @@ export default defineType({
           title: "Internal Link",
           type: "string",
           description: "Only internal routes like /shop, /contact, /products/1",
-          validation: (rule) =>
-            rule
-              .regex(/^\/(?!\/)/, {
-                name: "internalLink",
-                invert: false,
-              })
-              .error("Must start with a single slash (/). Example: /shop")
         },
 
         { name: "bgColor", title: "Background Color", type: "color" },

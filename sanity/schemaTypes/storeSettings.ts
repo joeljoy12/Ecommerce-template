@@ -1,5 +1,4 @@
 import { defineType, defineField } from "sanity"
-import CountrySelectorInput from "../components/CountrySelectorInput"
 
 export default defineType({
   name: "storeSettings",
@@ -11,14 +10,14 @@ export default defineType({
       name: "storeName",
       title: "Store Name",
       type: "string",
-      validation: (Rule) => Rule.required().min(1),
+      
     }),
 
     defineField({
       name: "siteUrl",
       title: "Website URL",
       type: "url",
-      validation: (Rule) => Rule.required(),
+      
     }),
 
     defineField({
@@ -46,13 +45,5 @@ export default defineType({
       ],
     }),
 
-    defineField({
-      name: "allowedCountries",
-      title: "Allowed Countries",
-      type: "array",
-      of: [{ type: "string" }],
-      components: { input: CountrySelectorInput },
-      validation: (Rule) => Rule.required().min(1),
-    }),
   ],
 })
