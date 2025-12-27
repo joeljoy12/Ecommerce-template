@@ -2,7 +2,13 @@
 
 import { useState } from "react"
 
-export default function BuyButton({ product, quantity = 1 }: { product: any; quantity?: number }) {
+export default function BuyButton({
+  product,
+  quantity = 1,
+}: {
+  product: any
+  quantity?: number
+}) {
   const [loading, setLoading] = useState(false)
 
   const handleCheckout = async () => {
@@ -16,8 +22,8 @@ export default function BuyButton({ product, quantity = 1 }: { product: any; qua
             {
               name: product.name,
               price: product.price,
-              imageUrl: product.imageUrl,
-              quantity, // ✅ send correct quantity
+              imageUrl: product.imageGallery?.[0] || product.imageUrl || "/placeholder.png",
+              quantity,
             },
           ],
         }),
@@ -25,15 +31,14 @@ export default function BuyButton({ product, quantity = 1 }: { product: any; qua
 
       const data = await res.json()
 
-      if (data.url) {
-        window.location.href = data.url // ✅ Redirect to Stripe Checkout
-      } else {
-        console.error("Checkout error:", data.error)
-        alert("Checkout failed. Please try again.")
+      if (!res.ok) {
+        throw new Error(data?.error || "Checkout failed")
       }
+
+      window.location.href = data.url
     } catch (err) {
       console.error("Error starting checkout:", err)
-      alert("Something went wrong. Try again later.")
+      alert("Checkout failed. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -43,7 +48,7 @@ export default function BuyButton({ product, quantity = 1 }: { product: any; qua
     <button
       onClick={handleCheckout}
       disabled={loading}
-      className=" px-6 py-3 bg-[#D4AF37] text-white rounded-lg hover:bg-[#b8952e] hover:bg-[#b8952e] transition disabled:opacity-50 -mt-6"
+      className="px-6 py-3 bg-[#D4AF37] text-white rounded-lg hover:bg-[#b8952e] transition disabled:opacity-50 -mt-6"
     >
       {loading ? "Redirecting..." : "Buy Now"}
     </button>

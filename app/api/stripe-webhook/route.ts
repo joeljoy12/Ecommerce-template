@@ -10,8 +10,7 @@ export async function POST(req: Request) {
     // ✅ Fetch Stripe keys dynamically from Sanity
     const settings = await client.fetch(`*[_type == "storeSettings"][0]{ stripeSection, allowedCountries }`)
     const stripeSecret = settings?.stripeSection?.secretKey
-    const webhookSecret = settings?.stripeSection?.webhookSecret
-
+  
     if (!stripeSecret) {
       return new Response("Stripe Secret Key not configured in Store Settings.", { status: 500 })
     }
@@ -90,7 +89,7 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify({ url: session.url }), { status: 200 })
   } catch (err: any) {
-    console.error("❌ Stripe Checkout Error:", err.message)
+    console.error("❌ Stripe Checkout Error webhook:", err.message)
     return new Response(`Error: ${err.message}`, { status: 500 })
   }
 }

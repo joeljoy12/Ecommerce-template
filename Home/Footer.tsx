@@ -69,7 +69,6 @@ export default function Footer() {
           setIsFallback(true)
         }
       } catch (err) {
-        console.error("❌ Live Footer fetch error:", err)
         setIsFallback(true)
       }
     }

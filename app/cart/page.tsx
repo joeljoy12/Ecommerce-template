@@ -90,7 +90,7 @@ const handleCheckout = async () => {
     }
   } catch (err) {
     console.error("Error starting checkout:", err)
-    alert("Something went wrong. Try again later.")
+    alert("checkout error Something went wrong. Try again later.")
   }
 }
 

@@ -60,7 +60,6 @@ export default function Navbar() {
           setIsFallback(true)
         }
       } catch (err) {
-        console.error("❌ Navbar fetch error:", err)
         setIsFallback(true)
       }
     }

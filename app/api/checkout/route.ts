@@ -87,6 +87,7 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ url: session.url }), { status: 200 })
   } catch (err: any) {
     console.error("❌ Stripe Checkout Error:", err.message)
-    return new Response(`Error: ${err.message}`, { status: 500 })
+return Response.json({ error: err?.message || "Checkout failed" }, { status: 500 })
+
   }
 }
